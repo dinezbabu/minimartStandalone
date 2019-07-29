@@ -5,8 +5,11 @@
  */
 package minimartstore;
 
+import Business.ProductList;
+import TableModel.OrderTableModel;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import minimartstore.Entity.Product;
 
 /**
  *
@@ -23,6 +26,7 @@ public class OrderFrame extends javax.swing.JFrame {
         this.setResizable(true);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(screenSize.width, screenSize.height);
+        
     }
 
     /**
@@ -38,12 +42,18 @@ public class OrderFrame extends javax.swing.JFrame {
         txtBarCode = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblOrder = new javax.swing.JTable();
-        btnSearch = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("frameOrder"); // NOI18N
 
         lblBarCode.setText("Bar Code");
+
+        txtBarCode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBarCodeKeyReleased(evt);
+            }
+        });
 
         tblOrder.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -56,9 +66,18 @@ public class OrderFrame extends javax.swing.JFrame {
                 "HSN Code", "Particulars", "Qty", "Price", "TotalPrice"
             }
         ));
+        tblOrder.setAutoscrolls(false);
+        tblOrder.setShowGrid(true);
         jScrollPane1.setViewportView(tblOrder);
 
-        btnSearch.setText("Search");
+        btnDelete.setText("Delete");
+        btnDelete.setActionCommand("Delete");
+        btnDelete.setMaximumSize(new java.awt.Dimension(2147483647, 80));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -69,12 +88,12 @@ public class OrderFrame extends javax.swing.JFrame {
                 .addComponent(lblBarCode)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtBarCode, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSearch)
-                .addGap(0, 103, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -84,18 +103,35 @@ public class OrderFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblBarCode)
                     .addComponent(txtBarCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearch))
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(292, Short.MAX_VALUE))
         );
 
         lblBarCode.getAccessibleContext().setAccessibleName("lblBarCode");
         txtBarCode.getAccessibleContext().setAccessibleName("txtBarCode");
+        btnDelete.getAccessibleContext().setAccessibleName("btnDelete");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+             ProductList productList= new ProductList();
+             productList.delete(new Product(tblOrder.getValueAt(tblOrder.getSelectedRow(), 0).toString()));
+             BindData(txtBarCode.getText());     
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void txtBarCodeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBarCodeKeyReleased
+                BindData(txtBarCode.getText());
+    }//GEN-LAST:event_txtBarCodeKeyReleased
+
+    private void BindData(String search)
+    {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        tblOrder.setPreferredSize(screenSize);
+        tblOrder.setModel(new OrderTableModel(new ProductList(),search));
+    }
     /**
      * @param args the command line arguments
      */
@@ -132,7 +168,7 @@ public class OrderFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnDelete;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBarCode;
     private javax.swing.JTable tblOrder;

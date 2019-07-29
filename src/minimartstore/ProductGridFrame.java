@@ -37,7 +37,7 @@ public class ProductGridFrame extends javax.swing.JFrame {
         initComponents();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(screenSize.width, screenSize.height);
-         BindData(txtBarCode.getText());
+         BindData("all");
          this.setVisible(true);
     }
 
@@ -84,6 +84,7 @@ public class ProductGridFrame extends javax.swing.JFrame {
                 "HSN Code", "Particulars", "Qty", "Price", "TotalPrice"
             }
         ));
+        tblOrder.setAutoscrolls(false);
         tblOrder.setRowHeight(20);
         tblOrder.setShowGrid(true);
         tblOrder.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -102,6 +103,11 @@ public class ProductGridFrame extends javax.swing.JFrame {
             }
         });
 
+        txtBarCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBarCodeActionPerformed(evt);
+            }
+        });
         txtBarCode.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtBarCodeKeyReleased(evt);
@@ -160,7 +166,7 @@ public class ProductGridFrame extends javax.swing.JFrame {
 
     private void txtBarCodeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBarCodeKeyReleased
         // TODO add your handling code here:
-                BindData(txtBarCode.getText());
+                BindData(txtBarCode.getText().isEmpty()? "all":txtBarCode.getText());
     }//GEN-LAST:event_txtBarCodeKeyReleased
 
     private void tblOrderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOrderMouseClicked
@@ -188,8 +194,12 @@ public class ProductGridFrame extends javax.swing.JFrame {
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
              ProductList productList= new ProductList();
              productList.delete(new Product(tblOrder.getValueAt(tblOrder.getSelectedRow(), 0).toString()));
-             BindData(txtBarCode.getText());
+             BindData(txtBarCode.getText().isEmpty()? "all":txtBarCode.getText());
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void txtBarCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBarCodeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBarCodeActionPerformed
 
     /**
      * @param args the command line arguments

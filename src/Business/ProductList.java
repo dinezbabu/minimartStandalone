@@ -128,7 +128,7 @@ public class ProductList {
     public ArrayList<Product> readallProduct(String search)
     {
         String sql;
-         if(search.trim().isEmpty())
+         if(search.trim().equals("all"))
           sql= "SELECT * FROM "+PRODUCTTABLE;
          else
           sql="SELECT * FROM "+PRODUCTTABLE+" where ProductName like '%"+search+"%' ";

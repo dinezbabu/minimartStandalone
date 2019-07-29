@@ -1,0 +1,1 @@
+chmod 700 minimart.db --- To Get rid of DatabaseIssue

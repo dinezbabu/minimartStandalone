@@ -178,16 +178,17 @@ public class ProductGridFrame extends javax.swing.JFrame {
              tblOrder.getValueAt(tblOrder.getSelectedRow(),tblOrder.getSelectedColumn()); 
              ProductList productList= new ProductList();
              productList.Update(new Product(tblOrder.getValueAt(tblOrder.getSelectedRow(), 1).toString(),
-                     ZonedDateTime.parse(tblOrder.getValueAt(tblOrder.getSelectedRow(), 2).toString() , dateTimeFormatter ).toLocalDate(),
-                     Integer.parseInt(tblOrder.getValueAt(tblOrder.getSelectedRow(), 3).toString()),
+                     tblOrder.getValueAt(tblOrder.getSelectedRow(), 2).toString(),
+                     ZonedDateTime.parse(tblOrder.getValueAt(tblOrder.getSelectedRow(), 3).toString() , dateTimeFormatter ).toLocalDate(),
                      Integer.parseInt(tblOrder.getValueAt(tblOrder.getSelectedRow(), 4).toString()),
                      Integer.parseInt(tblOrder.getValueAt(tblOrder.getSelectedRow(), 5).toString()),
-                     Float.parseFloat(tblOrder.getValueAt(tblOrder.getSelectedRow(), 6).toString()),
+                     Integer.parseInt(tblOrder.getValueAt(tblOrder.getSelectedRow(), 6).toString()),
                      Float.parseFloat(tblOrder.getValueAt(tblOrder.getSelectedRow(), 7).toString()),
                      Float.parseFloat(tblOrder.getValueAt(tblOrder.getSelectedRow(), 8).toString()),
                      Float.parseFloat(tblOrder.getValueAt(tblOrder.getSelectedRow(), 9).toString()),
                      Float.parseFloat(tblOrder.getValueAt(tblOrder.getSelectedRow(), 10).toString()),
-                    Float.parseFloat( tblOrder.getValueAt(tblOrder.getSelectedRow(), 11).toString()),
+                     Float.parseFloat(tblOrder.getValueAt(tblOrder.getSelectedRow(), 11).toString()),
+                    Float.parseFloat( tblOrder.getValueAt(tblOrder.getSelectedRow(), 12).toString()),
                      "Admin",
                      "Admin"));    }//GEN-LAST:event_formInputMethodTextChanged
 

@@ -4,49 +4,34 @@
  * and open the template in the editor.
  */
 package Business;
-
 import static Utility.Constant.PRODUCTTABLE;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import minimartstore.Entity.Product;
 import minimartstore.SQLConnection;
-
 /**
  *
  * @author dbabu
  */
-public class ProductList {
-         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-    private ArrayList<Product> productList;
+public class CustomerBasket {
     SQLConnection sqlConnection=null;
+             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
 
     
-    public ProductList() {
-      productList = new ArrayList<Product>();
-   }
-    public void delete(Product product) {
-        String sql = "DELETE FROM "+PRODUCTTABLE+" Where BarCode=?";
-         try (Connection conn = this.connect();
-             PreparedStatement stmt  = conn.prepareStatement(sql);)
-         {
-            stmt.setString(1, product.getBarCode());
-            stmt.executeUpdate();
-         }
-         catch(Exception e){
-             e.printStackTrace();
-         }
-   }
-    public void Update(Product product) {
-        String sql = "UPDATE "+PRODUCTTABLE+" SET "
-                + "ProductName=?,"
+     private Connection connect()
+    {
+         sqlConnection= sqlConnection==null? new SQLConnection(): sqlConnection;
+         return sqlConnection.connect();
+    }
+     
+     public void Update(Product product) {
+        //Need IMplementation
+        String sql = "UPDATE "+PRODUCTTABLE+" SET ProductName=?,"
                 + "ExpiryDate=?,"
                 +"TotalPurchasedQty=?,"
                 +"TotalAvailableQty=?,"
@@ -58,9 +43,8 @@ public class ProductList {
                 + "SGST=?,"
                 + "Tax=?,"
                 + "ModifiedDate=?,"
-                + "ModifiedBy=?,"
-                + "BarCode=?"
-                +" Where BarCode=?";
+                + "ModifiedBy=?"
+                +" Where ProductName=?";
          try (Connection conn = this.connect();
              PreparedStatement stmt  = conn.prepareStatement(sql);)
          {
@@ -77,71 +61,36 @@ public class ProductList {
             stmt.setFloat(11, product.getGst());
             stmt.setString(12, LocalDate.now().format(formatter));
             stmt.setString(13, product.getModifiedBy());
-            stmt.setString(14, product.getBarCode());
-            stmt.setString(15, product.getBarCode());
+            stmt.setString(14, product.getProductName());
             stmt.executeUpdate();
-            System.out.println("Data Updated for Product "+product.getProductName());
+            System.out.println("Data Updated for Product"+product.getProductName());
          }
          catch(Exception e){
              e.printStackTrace();
          }
    }
-    
-    public void add(Product product) {
+       public void delete(Product product) {
         //Need IMplementation
-        String sql = "INSERT INTO "+PRODUCTTABLE+" (ProductName,ExpiryDate,TotalPurchasedQty,TotalAvailableQty,ThresholdQty,MRPWithOutTax,RPWithOutTax,MMPriceWithOutTax,CGST,SGST,Tax,CreatedDate,CreatedBy,ModifiedDate,ModifiedBy,BarCode)"+
-                "Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "DELETE FROM "+PRODUCTTABLE+" Where Barcode=?";
          try (Connection conn = this.connect();
              PreparedStatement stmt  = conn.prepareStatement(sql);)
          {
             stmt.setString(1, product.getProductName());
-            stmt.setString(2,product.getExpiryDate().format(formatter));
-            stmt.setInt(3, product.getTotalPurchasedQty());
-            stmt.setInt(4, product.getTotalAvailableQty());
-            stmt.setInt(5, product.getThresholdQty());
-            stmt.setFloat(6, product.getMrpWithoutTax());
-            stmt.setFloat(7, product.getRpWithoutTax());
-            stmt.setFloat(8, product.getMmpWithoutTax());
-            stmt.setFloat(9, product.getCgst());
-            stmt.setFloat(10, product.getSgst());
-            stmt.setFloat(11, product.getGst());
-            stmt.setString(12, LocalDate.now().format(formatter));
-            stmt.setString(13, product.getCreatedBy());
-            stmt.setString(14, LocalDate.now().format(formatter));
-            stmt.setString(15, product.getModifiedBy());
-            stmt.setString(16, product.getBarCode());
             stmt.executeUpdate();
          }
          catch(Exception e){
              e.printStackTrace();
          }
    }
-    
-    public ArrayList<Product> getProduct() {
-      return productList;
-   }
-    
-    private Connection connect()
-    {
-         sqlConnection= sqlConnection==null? new SQLConnection(): sqlConnection;
-         return sqlConnection.connect();
-    }
-    
-    public ArrayList<Product> readallProduct(String search)
-    {
-        String sql;
-         if(search.trim().equals("all"))
-          sql= "SELECT * FROM "+PRODUCTTABLE;
-         else
-          sql="SELECT * FROM "+PRODUCTTABLE+" where ProductName like '%"+search+"%' ";
-         ArrayList<Product> dataList = new ArrayList<>();
+     public Product readSingleProduct(String barCode){
+         if(!barCode.trim().isEmpty())
+         {
+          String sql="SELECT * FROM "+PRODUCTTABLE+" where Barcode="+barCode;
          try (Connection conn = this.connect();
              Statement stmt  = conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)){
-            // loop through the result set
+            Product product = new Product();
             while (rs.next()) {
-                    Product product = new Product();
-                    product.setBarCode(rs.getString("BarCode"));
                     product.setProductName(rs.getString("ProductName"));
                     product.setExpiryDate(LocalDate.parse(rs.getString("ExpiryDate"),formatter));
                     product.setTotalPurchasedQty(Integer.parseInt(rs.getString("TotalPurchasedQty")));
@@ -157,15 +106,15 @@ public class ProductList {
                     product.setCreatedBy(rs.getString("CreatedBy"));
                     product.setModifiedDate(LocalDate.parse(rs.getString("ModifiedDate"),formatter));
                     product.setModifiedBy(rs.getString("ModifiedBy"));
-                    dataList.add(product);
+                    product.setBarCode("BarCode");
                     System.out.println(rs.getString("ProductName"));
-            }            
+            }
+            return product;
         } catch ( SQLException e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
-        return dataList;
+     }
+        return null;
     }
-    
-    
 }

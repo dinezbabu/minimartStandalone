@@ -24,7 +24,8 @@ public class ProductTableModel extends AbstractTableModel {
                                        .withLocale( Locale.getDefault() );
    private ArrayList<Product> prodList;
       private String[] columnNames = {"ProductName","ExpiryDate","TotalPurchasedQty","TotalAvailableQty","ThresholdQty","MRPWithoutTax","RPWithoutTax","MMPriceWithoutTax","CGST","SGST","GST"};
-   public ProductTableModel(ProductList productList,String search) {
+   public ProductTableModel(){}
+      public ProductTableModel(ProductList productList,String search) {
         this.prodList = productList.readallProduct(search);   
    }
     public int getRowCount() {
@@ -109,7 +110,7 @@ public class ProductTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int row, int col) {
       Object temp = null;
-      if (col == 0) {
+  if (col == 0) {
          temp = prodList.get(row).getProductName();
       }
       else if (col == 1) {

@@ -259,7 +259,7 @@ public class ProductFrame extends javax.swing.JFrame {
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
         // TODO add your handling code here:
         ProductList productList= new ProductList();
-        productList.add(new Product(txtProductName.getText(),ZonedDateTime.parse( dtExpDate.getDate().toString() , dateTimeFormatter ).toLocalDate(),Integer.parseInt(txtTotalPurchaseQty.getText()),Integer.parseInt(txtTotalAvailableQty.getText()),Integer.parseInt(txtThresholdQty.getText()),Float.parseFloat(txtMRPWithoutTax.getText()),Float.parseFloat(txtRPWithoutTax.getText()),Float.parseFloat(txtMMPWithoutTax.getText()),Float.parseFloat(txtCGST.getText()),Float.parseFloat(txtSGST.getText()),Float.parseFloat(txtGST.getText()),"Admin","Admin"));
+        productList.add(new Product(txtBarCode.getText(),txtProductName.getText(),ZonedDateTime.parse( dtExpDate.getDate().toString() , dateTimeFormatter ).toLocalDate(),Integer.parseInt(txtTotalPurchaseQty.getText()),Integer.parseInt(txtTotalAvailableQty.getText()),Integer.parseInt(txtThresholdQty.getText()),Float.parseFloat(txtMRPWithoutTax.getText()),Float.parseFloat(txtRPWithoutTax.getText()),Float.parseFloat(txtMMPWithoutTax.getText()),Float.parseFloat(txtCGST.getText()),Float.parseFloat(txtSGST.getText()),Float.parseFloat(txtGST.getText()),"Admin","Admin"));
         this.setVisible(false);
         new ProductGridFrame();
     }//GEN-LAST:event_btnSubmitActionPerformed

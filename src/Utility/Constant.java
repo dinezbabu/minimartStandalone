@@ -12,5 +12,6 @@ package Utility;
 public class Constant {
     
     public static String PRODUCTTABLE="Product";
+    public static String BASKETTABLE="Basket";
     
 }

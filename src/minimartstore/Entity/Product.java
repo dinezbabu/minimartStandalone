@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
  */
 public class Product {
     private String productName;
+    private String barCode;
     private LocalDate expiryDate;
     private int totalPurchasedQty;
     private int totalAvailableQty;
@@ -29,6 +30,13 @@ public class Product {
     private LocalDate modifiedDate;
     private String modifiedBy;
 
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
+    }
     public String getProductName() {
         return productName;
     }
@@ -153,7 +161,8 @@ public class Product {
     {
                 this.productName = productName;
     }
-    public Product(String productName, LocalDate expiryDate, int totalPurchasedQty, int totalAvailableQty, int thresholdQty, float mrpWithoutTax, float rpWithoutTax, float mmpWithoutTax, float cgst, float sgst, float gst,  String createdBy, String modifiedBy) {
+    public Product(String barCode, String productName, LocalDate expiryDate, int totalPurchasedQty, int totalAvailableQty, int thresholdQty, float mrpWithoutTax, float rpWithoutTax, float mmpWithoutTax, float cgst, float sgst, float gst,  String createdBy, String modifiedBy) {
+        this.barCode= barCode;
         this.productName = productName;
         this.expiryDate = expiryDate;
         this.totalPurchasedQty = totalPurchasedQty;

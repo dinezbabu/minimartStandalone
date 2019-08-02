@@ -5,11 +5,13 @@
  */
 package TableModel;
 
+import Business.CustomerBasket;
 import Business.ProductList;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Optional;
 import javax.swing.table.AbstractTableModel;
 import minimartstore.Entity.Product;
 
@@ -17,14 +19,45 @@ import minimartstore.Entity.Product;
  *
  * @author dbabu
  */
-public class OrderTableModel extends AbstractTableModel{
+public class CustomerBasketModel extends AbstractTableModel{
    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
          DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern( "E MMM dd HH:mm:ss z uuuu" )
                                        .withLocale( Locale.getDefault() );
-   private ArrayList<Product> prodList;
+   public static ArrayList<Product> prodList;
+   CustomerBasket customerProductList = new CustomerBasket();
       private String[] columnNames = {"ProductName","ExpiryDate","TotalPurchasedQty","TotalAvailableQty","ThresholdQty","MRPWithoutTax","RPWithoutTax","MMPriceWithoutTax","CGST","SGST","GST"};
-   public OrderTableModel(ProductList productList,String search) {
-        this.prodList = productList.readallProduct(search);   
+   public CustomerBasketModel(){}
+      public CustomerBasketModel(CustomerBasket customerProductList,String search) {
+      if(!search.isEmpty())
+      {
+       if(prodList.size() > 0){
+       this.prodList.stream().forEach(prod ->{
+          if(!prod.getBarCode().equals(search))
+                      this.prodList.add(customerProductList.readSingleProduct(search));   
+       });
+      }
+      else
+                                this.prodList.add(customerProductList.readSingleProduct(search));   
+
+   }
+   }
+    public boolean addProduct(Product product)
+   {
+       try{
+           return prodList.add(product);
+       }
+       catch(Exception e){
+       }
+       return false;
+   }
+   public Product getProduct(String barCode)
+   {
+       try{
+           return customerProductList.readSingleProduct(barCode);
+       }
+       catch(Exception e){
+       }
+       return null;
    }
     public int getRowCount() {
       int size;
@@ -32,6 +65,7 @@ public class OrderTableModel extends AbstractTableModel{
          size = 0;
       }
       else {
+          
          size = prodList.size();
       }
       return size;    }

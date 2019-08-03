@@ -48,7 +48,6 @@ public class CustomerBasketModel extends AbstractTableModel{
            
            if(basketProduct.getProductName()!=null )
            {
-               
                if(prodList.size()>0)
                {
                     for(BasketProduct basketprod: prodList)
@@ -74,6 +73,12 @@ public class CustomerBasketModel extends AbstractTableModel{
        }
        return false;
    }
+    
+    public void insertCustomerProductToDB()
+    {
+        customerProductList.add(prodList);
+    }
+    
    public BasketProduct getProduct(String barCode)
    {
        try{
@@ -135,7 +140,7 @@ public class CustomerBasketModel extends AbstractTableModel{
             row.setGst(Float.parseFloat(aValue.toString()));
       }
         CustomerBasket customerBasket = new CustomerBasket();
-      customerBasket.add(row); 
+      //customerBasket.add(row); 
         }
         catch(NumberFormatException e){
             e.printStackTrace();

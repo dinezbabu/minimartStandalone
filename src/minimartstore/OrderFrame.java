@@ -117,6 +117,11 @@ public class OrderFrame extends javax.swing.JFrame {
         });
 
         btnPlaceOrder.setText("Place Order");
+        btnPlaceOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPlaceOrderActionPerformed(evt);
+            }
+        });
 
         lblTotal.setText("Total");
 
@@ -218,6 +223,13 @@ System.out.println("4"+txtBarCode.getText());
     private void txtBarCodeInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtBarCodeInputMethodTextChanged
                System.out.println("6");
     }//GEN-LAST:event_txtBarCodeInputMethodTextChanged
+
+    private void btnPlaceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlaceOrderActionPerformed
+            CustomerBasketModel customerBasketModel= new CustomerBasketModel();
+            customerBasketModel.insertCustomerProductToDB();
+            CustomerBasketModel.prodList= new ArrayList<>();
+            tblOrder.setModel(customerBasketModel);
+    }//GEN-LAST:event_btnPlaceOrderActionPerformed
 
     private void BindData(String search)
     {

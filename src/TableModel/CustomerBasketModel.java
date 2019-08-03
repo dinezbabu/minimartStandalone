@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Optional;
 import javax.swing.table.AbstractTableModel;
+import minimartstore.Entity.BasketProduct;
 import minimartstore.Entity.Product;
 
 /**
@@ -23,9 +24,9 @@ public class CustomerBasketModel extends AbstractTableModel{
    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
          DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern( "E MMM dd HH:mm:ss z uuuu" )
                                        .withLocale( Locale.getDefault() );
-   public static ArrayList<Product> prodList;
+   public static ArrayList<BasketProduct> prodList;
    CustomerBasket customerProductList = new CustomerBasket();
-      private String[] columnNames = {"ProductName","ExpiryDate","TotalPurchasedQty","TotalAvailableQty","ThresholdQty","MRPWithoutTax","RPWithoutTax","MMPriceWithoutTax","CGST","SGST","GST"};
+      private String[] columnNames = {"ProductName","Quantity","MRPWithoutTax","RPWithoutTax","MMPriceWithoutTax","CGST","SGST","GST"};
    public CustomerBasketModel(){}
       public CustomerBasketModel(CustomerBasket customerProductList,String search) {
       if(!search.isEmpty())
@@ -41,16 +42,39 @@ public class CustomerBasketModel extends AbstractTableModel{
 
    }
    }
-    public boolean addProduct(Product product)
+    public boolean addProduct(BasketProduct basketProduct)
    {
        try{
-           return prodList.add(product);
+           
+           if(basketProduct.getProductName()!=null )
+           {
+               
+               if(prodList.size()>0)
+               {
+                    for(BasketProduct basketprod: prodList)
+                    {
+                            if(basketprod.getBarCode().equals(basketProduct.getBarCode())){
+                                basketprod.setQuantity(basketprod.getQuantity()+1);
+                                return true;
+                            }
+                    }
+                    prodList.add(basketProduct);
+                    return true;
+               }
+               else
+               {
+                                 prodList.add(basketProduct);
+                                 return true;
+               }
+           }
+           
        }
        catch(Exception e){
+           return false;
        }
        return false;
    }
-   public Product getProduct(String barCode)
+   public BasketProduct getProduct(String barCode)
    {
        try{
            return customerProductList.readSingleProduct(barCode);
@@ -73,48 +97,45 @@ public class CustomerBasketModel extends AbstractTableModel{
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex)
     {
-        return false;
+         switch (columnIndex) {
+         case 1:
+             return true;
+         default:
+             return false;
+      }
     }
  
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex)
     {
-        Product row = prodList.get(rowIndex);
+        BasketProduct row = prodList.get(rowIndex);
         try{
         if (columnIndex == 0) {
             row.setProductName(aValue.toString());
       }
-      else if (columnIndex == 1) {
-         row.setExpiryDate(LocalDate.parse(aValue.toString(),formatter));
+        else if (columnIndex == 1) {
+            row.setQuantity(Integer.parseInt(aValue.toString()));
       }
       else if (columnIndex == 2) {
-            row.setTotalPurchasedQty(Integer.parseInt(aValue.toString()));
-      }
-      else if(columnIndex==3){
-      row.setTotalAvailableQty(Integer.parseInt(aValue.toString()));
-      }
-      else if (columnIndex == 4) {
-            row.setThresholdQty(Integer.parseInt(aValue.toString()));
-      }else if (columnIndex == 5) {
             row.setMrpWithoutTax(Float.parseFloat(aValue.toString()));
       }
-      else if (columnIndex == 6) {
+      else if (columnIndex == 3) {
             row.setRpWithoutTax(Float.parseFloat(aValue.toString()));
       }
-      else if (columnIndex == 7) {
+      else if (columnIndex == 4) {
             row.setMmpWithoutTax(Float.parseFloat(aValue.toString()));
       }
-      else if (columnIndex == 8) {
+      else if (columnIndex == 5) {
             row.setCgst(Float.parseFloat(aValue.toString()));
       }
-      else if (columnIndex == 9) {
+      else if (columnIndex == 6) {
             row.setSgst(Float.parseFloat(aValue.toString()));
       }
-      else if (columnIndex == 10) {
+      else if (columnIndex == 7) {
             row.setGst(Float.parseFloat(aValue.toString()));
       }
-        ProductList productList = new ProductList();
-      productList.Update(row); 
+        CustomerBasket customerBasket = new CustomerBasket();
+      customerBasket.add(row); 
         }
         catch(NumberFormatException e){
             e.printStackTrace();
@@ -142,37 +163,35 @@ public class CustomerBasketModel extends AbstractTableModel{
     @Override
     public Object getValueAt(int row, int col) {
       Object temp = null;
+      try{
+          if(!prodList.get(row).equals(null)){
       if (col == 0) {
          temp = prodList.get(row).getProductName();
       }
       else if (col == 1) {
-         temp = LocalDate.parse(prodList.get(row).getExpiryDate().toString()).format(formatter);
-      }
-      else if (col == 2) {
-         temp = prodList.get(row).getTotalPurchasedQty();
-      }
-      else if (col == 3) {
-         temp = prodList.get(row).getTotalAvailableQty();
-      }
-      else if (col == 4) {
-         temp = prodList.get(row).getThresholdQty();
-      }else if (col == 5) {
+         temp = prodList.get(row).getQuantity();
+      }else if (col == 2) {
          temp = prodList.get(row).getMrpWithoutTax();
       }
-      else if (col == 6) {
+      else if (col == 3) {
          temp = prodList.get(row).getRpWithoutTax();
       }
-      else if (col == 7) {
+      else if (col == 4) {
          temp = prodList.get(row).getMmpWithoutTax();
       }
-      else if (col == 8) {
+      else if (col == 5) {
          temp = prodList.get(row).getCgst();
       }
-      else if (col == 9) {
+      else if (col == 6) {
          temp = prodList.get(row).getSgst();
       }
-      else if (col == 10) {
+      else if (col == 7) {
          temp = prodList.get(row).getGst();
+      }
+          }
+      }
+      catch(Exception e){
+          e.printStackTrace();
       }
       
       return temp;    

@@ -10,7 +10,11 @@ import Business.ProductList;
 import TableModel.CustomerBasketModel;
 import TableModel.ProductTableModel;
 import java.awt.Dimension;
+import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import minimartstore.Entity.Product;
@@ -30,9 +34,9 @@ public class OrderFrame extends javax.swing.JFrame {
         this.setResizable(true);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(screenSize.width, screenSize.height);
-        CustomerBasketModel.prodList = new ArrayList<>(); ///making basket empty
-        
+        CustomerBasketModel.prodList = new ArrayList<>(); ///making basket empty 
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -51,13 +55,39 @@ public class OrderFrame extends javax.swing.JFrame {
         btnPlaceOrder = new javax.swing.JButton();
         lblTotal = new javax.swing.JLabel();
         lblTotalPrice = new javax.swing.JLabel();
+        lblMessage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("frameOrder"); // NOI18N
 
         lblBarCode.setText("Bar Code");
 
+        txtBarCode.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtBarCodeFocusGained(evt);
+            }
+        });
+        txtBarCode.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                txtBarCodeInputMethodTextChanged(evt);
+            }
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+        });
+        txtBarCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBarCodeActionPerformed(evt);
+            }
+        });
+        txtBarCode.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                txtBarCodePropertyChange(evt);
+            }
+        });
         txtBarCode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtBarCodeKeyTyped(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtBarCodeKeyReleased(evt);
             }
@@ -79,7 +109,6 @@ public class OrderFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblOrder);
 
         btnDelete.setText("Delete");
-        btnDelete.setActionCommand("Delete");
         btnDelete.setMaximumSize(new java.awt.Dimension(2147483647, 80));
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -90,6 +119,8 @@ public class OrderFrame extends javax.swing.JFrame {
         btnPlaceOrder.setText("Place Order");
 
         lblTotal.setText("Total");
+
+        lblMessage.setForeground(new java.awt.Color(255, 51, 51));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -102,6 +133,8 @@ public class OrderFrame extends javax.swing.JFrame {
                 .addComponent(txtBarCode, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(lblMessage)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -125,7 +158,8 @@ public class OrderFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblBarCode)
                     .addComponent(txtBarCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblMessage))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -145,24 +179,62 @@ public class OrderFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-             ProductTableModel productTableModel= new ProductTableModel();
-             productTableModel.removeRow(tblOrder.getSelectedRow());
+             CustomerBasketModel customerBasketModel= new CustomerBasketModel();
+             customerBasketModel.removeRow(tblOrder.getSelectedRow());
              BindData(txtBarCode.getText());     
+             tblOrder.setModel(customerBasketModel);
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void txtBarCodeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBarCodeKeyReleased
-                BindData(txtBarCode.getText());
-                txtBarCode.setText("");
+               System.out.println("1"+txtBarCode.getText()+evt.getKeyCode());   
     }//GEN-LAST:event_txtBarCodeKeyReleased
+
+    private void txtBarCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBarCodeActionPerformed
+                   BindData(txtBarCode.getText());
+                   txtBarCode.setText("");                 
+    }//GEN-LAST:event_txtBarCodeActionPerformed
+
+    private void txtBarCodePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtBarCodePropertyChange
+                 
+        System.out.println("3"+txtBarCode.getText());     
+    }//GEN-LAST:event_txtBarCodePropertyChange
+
+    private void txtBarCodeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBarCodeKeyTyped
+System.out.println("4"+txtBarCode.getText());
+    }//GEN-LAST:event_txtBarCodeKeyTyped
+
+    private void txtBarCodeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBarCodeFocusGained
+        try{
+        Robot r = new Robot();
+        r.keyPress(KeyEvent.VK_ENTER);
+        r.keyRelease(KeyEvent.VK_ENTER);        
+        System.out.println("5"+txtBarCode.getText());
+        }
+        catch(Exception e)
+        {
+        }
+    }//GEN-LAST:event_txtBarCodeFocusGained
+
+    private void txtBarCodeInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtBarCodeInputMethodTextChanged
+               System.out.println("6");
+    }//GEN-LAST:event_txtBarCodeInputMethodTextChanged
 
     private void BindData(String search)
     {
+        try{
         if(!search.isEmpty()){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         tblOrder.setPreferredSize(screenSize);
         CustomerBasketModel model = new CustomerBasketModel();
-        model.addProduct(model.getProduct(search));
-        tblOrder.setModel(model);
+        lblMessage.setText("");
+        if(!model.addProduct(model.getProduct(search)))
+            lblMessage.setText(txtBarCode.getText() +" Not Available in Inventory");
+        else
+                         tblOrder.setModel(model);
+        }
+        }
+        catch(Exception e){
+            e.printStackTrace();
         }
     }
     /**
@@ -205,9 +277,11 @@ public class OrderFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnPlaceOrder;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBarCode;
+    private javax.swing.JLabel lblMessage;
     private javax.swing.JLabel lblTotal;
     private javax.swing.JLabel lblTotalPrice;
     private javax.swing.JTable tblOrder;
     private javax.swing.JTextField txtBarCode;
     // End of variables declaration//GEN-END:variables
+
 }
